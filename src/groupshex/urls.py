@@ -1,17 +1,12 @@
 from django.conf.urls import patterns, include, url
+from django.contrib import admin
+from django.contrib.sites.models import Site
+from django.contrib.auth.models import Group
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+admin.autodiscover()
+admin.site.unregister(Site)
+admin.site.unregister(Group)
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'groupshex.views.home', name='home'),
-    # url(r'^groupshex/', include('groupshex.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
 )
