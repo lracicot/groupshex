@@ -15,6 +15,9 @@ class User(DjangoUser):
     """
     objects = UserManager()
 
+    class Meta:
+        proxy = True
+
 class Expense(models.Model):
     """
     A basic expense. Each expense is made by one user, and is added to the user's total expenses, or "Karma"
