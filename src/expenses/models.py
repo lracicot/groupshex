@@ -39,7 +39,7 @@ class Expense(models.Model):
     amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Amount'))
     date = models.DateField(auto_now_add=True, verbose_name=_('Date'))
     buyer = models.ForeignKey(User, verbose_name=_('Buyer'), related_name='expenses')
-    sharers = models.ManyToManyField(User, verbose_name=_('Sharers'), related_name='expenses', through='ExpensesUsers')
+    sharers = models.ManyToManyField(User, verbose_name=_('Sharers'), related_name='involvedExpenses', through='ExpensesUsers')
     group = models.ForeignKey(Group, verbose_name=_('Group'), related_name='expenses')
     
     class Meta:
@@ -48,7 +48,7 @@ class Expense(models.Model):
         verbose_name = _('Expense')
         verbose_name_plural = _('Expenses')
 
-class ExpensesUsers(models.Model)
+class ExpensesUsers(models.Model):
     user = models.ForeignKey(User)
     expense = models.ForeignKey(Expense)
     paid = models.BooleanField(verbose_name=_('Paid'))
