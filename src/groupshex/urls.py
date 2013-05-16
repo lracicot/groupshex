@@ -8,5 +8,5 @@ admin.site.unregister(Site)
 admin.site.unregister(Group)
 
 urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
+    url('^admin/', include(admin.site.urls)),
 )
