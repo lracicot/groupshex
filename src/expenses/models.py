@@ -36,10 +36,8 @@ class Expense(models.Model):
     """
     title = models.CharField(verbose_name=_('Title'), max_length=255)
     description = models.TextField(verbose_name=_('Description'), blank=True)
-    amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Amount'))
     date = models.DateField(auto_now_add=True, verbose_name=_('Date'))
     buyer = models.ForeignKey(User, verbose_name=_('Buyer'), related_name='expenses')
-    sharers = models.ManyToManyField(User, verbose_name=_('Sharers'), related_name='involvedExpenses', through='ExpensesUsers')
     group = models.ForeignKey(Group, verbose_name=_('Group'), related_name='expenses')
     
     class Meta:
@@ -48,8 +46,10 @@ class Expense(models.Model):
         verbose_name = _('Expense')
         verbose_name_plural = _('Expenses')
 
-class ExpensesUsers(models.Model):
-    user = models.ForeignKey(User)
-    expense = models.ForeignKey(Expense)
-    paid = models.BooleanField(verbose_name=_('Paid'))
-    paid_amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Amount'))
+class Expense_Shares(models.Model):
+    """
+    A share of a expense is a part of it's total value, attributed to a user
+    """
+    amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Amount'))
+    expense = models.ForeignKey(Expense, verbose_name=_('Expense'), related_name='shares')
+    user = models.ForeignKey(User, verbose_name=_('User'), related_name='expense_shares')

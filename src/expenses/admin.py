@@ -4,4 +4,4 @@ from django.contrib import admin
 admin.site.register(Expense)
 admin.site.register(Group)
 admin.site.register(Membership)
-admin.site.register(ExpensesUsers)
+admin.site.register(Expense_Shares)
