@@ -8,6 +8,8 @@ admin.site.unregister(Site)
 admin.site.unregister(Group)
 
 urlpatterns = patterns('',
+	url(r'^', include('expenses.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'', include('social_auth.urls')),
+	url(r'^accounts/', include('login.urls')),
+    url(r'^accounts/', include('social_auth.urls')),
 )

@@ -7,10 +7,10 @@ def index(request):
     print(request.user)
 
     if request.user.is_authenticated():
-        template = loader.get_template('groupboard.html')
+        return redirect('/accounts/login/')
+    else:
+        template = loader.get_template('login.html')
         context = Context({
             'test': 'test',
         })
         return HttpResponse(template.render(context))
-    else:
-        return redirect('/accounts/login/')
