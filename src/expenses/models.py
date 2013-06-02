@@ -15,6 +15,15 @@ class User(DjangoUser):
     """
     objects = UserManager()
 
+    def get_groups(self):
+
+        if self.groups.all().count() <= 0:
+            group = Group(name=_('Depenses personelles'))
+            group.save()
+            Membership.objects.create(user=self, group=group)
+
+        return self.groups.all()
+
     class Meta:
         proxy = True
 
@@ -28,7 +37,7 @@ class Group(models.Model):
 class Membership(models.Model):
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)
-    date_joined = models.DateField(verbose_name=_('Date joined'))
+    date_joined = models.DateField(auto_now_add=True, verbose_name=_('Date joined'))
 
 class Expense(models.Model):
     """
