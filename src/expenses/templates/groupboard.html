@@ -1,1 +1,22 @@
-Board
+{% extends "header.html" %}
+{% block html_title %}
+	{{ group.name }} - {{ block.super }}
+{% endblock %}
+{% block script_header %}
+	<script type="text/javascript" src="/static/expenses-list.js"></script>
+{% endblock %}
+{% block title %}{{ group.name }}{% endblock %}
+{% block subtitle %}Dépenses{% endblock %}
+{% block content %}
+
+<div ng-app="expensesList" ng-controller="ExpensesCtl">
+
+	<table>
+		<tr ng-repeat="expense in expenses">
+			<td>[{expense.amount}]</td>
+		</tr>
+	</table>
+
+</div>
+
+{% endblock %}
