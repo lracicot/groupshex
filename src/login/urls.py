@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
-from expenses import views
+from login import views
 
 urlpatterns = patterns('',
-    url(r'^login/$', views.login)
+    url(r'^login/$', views.index)
 )

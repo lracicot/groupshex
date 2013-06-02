@@ -4,7 +4,8 @@ from django.template import Context, loader
 
 def index(request):
 
-    print(request.user)
+    print('exp:')
+    print(request.user.is_authenticated())
 
     if request.user.is_authenticated():
         template = loader.get_template('groupboard.html')
