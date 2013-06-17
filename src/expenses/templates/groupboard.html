@@ -6,14 +6,37 @@
 	<script type="text/javascript" src="/static/expenses-list.js"></script>
 {% endblock %}
 {% block title %}{{ group.name }}{% endblock %}
-{% block subtitle %}Dépenses{% endblock %}
+{% block subtitle %}{% endblock %}
 {% block content %}
 
 <div ng-app="expensesList" ng-controller="ExpensesCtl">
 
-	<table>
+	<form ng-submit="addExpense()">
+		<div class="input-prepend">
+			<span class="add-on">$</span>
+			<input type="text" placeholder="0.00" class="input-mini" ng-model="amountText" required />
+		</div>
+
+        <input type="text" placeholder="food 'n shits" ng-model="titleText" class="input-xlarge" required />
+        <input type="hidden" id="group_id" value="{{group.id}}" required />
+
+	    <input type="submit" value="Ajouter" class="btn btn-primary" />
+    </form>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Acheteur</th>
+				<th>Total</th>
+				<th>Partage</th>
+				<th>Description</th>
+			</tr>
+		</thead>
 		<tr ng-repeat="expense in expenses">
-			<td>[{expense.amount}]</td>
+			<td>Louis Racicot</td>
+			<td>[{expense.amount}] $</td>
+			<td>100%</td>
+			<td>Food and some other shits</td>
 		</tr>
 	</table>
 

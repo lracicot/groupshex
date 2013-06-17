@@ -34,6 +34,9 @@ class Group(models.Model):
     name = models.CharField(verbose_name=_('Name'), max_length=255)
     users = models.ManyToManyField(User, verbose_name=_('User'), related_name='groups', through='Membership')
 
+    def get_users(self):
+        return User.objects.raw('SELECT * FROM '+User._meta.db_table+' JOIN '+Membership._meta.db_table+' ON '+Membership._meta.db_table+'.user_id = '+User._meta.db_table+'.id WHERE '+Membership._meta.db_table+'.group_id = '+str(self.id))
+
 class Membership(models.Model):
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)
