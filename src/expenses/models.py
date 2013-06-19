@@ -35,7 +35,7 @@ class Group(models.Model):
     users = models.ManyToManyField(User, verbose_name=_('User'), related_name='groups', through='Membership')
 
     def get_users(self):
-        return User.objects.raw('SELECT * FROM '+User._meta.db_table+' JOIN '+Membership._meta.db_table+' ON '+Membership._meta.db_table+'.user_id = '+User._meta.db_table+'.id WHERE '+Membership._meta.db_table+'.group_id = '+str(self.id))
+        return User.objects.raw('SELECT '+User._meta.db_table+'.* FROM '+User._meta.db_table+' JOIN '+Membership._meta.db_table+' ON '+Membership._meta.db_table+'.user_id = '+User._meta.db_table+'.id WHERE '+Membership._meta.db_table+'.group_id = '+str(self.id))
 
 class Membership(models.Model):
     user = models.ForeignKey(User)
@@ -51,6 +51,19 @@ class Expense(models.Model):
     date = models.DateField(auto_now_add=True, verbose_name=_('Date'))
     buyer = models.ForeignKey(User, verbose_name=_('Buyer'), related_name='expenses')
     group = models.ForeignKey(Group, verbose_name=_('Group'), related_name='expenses')
+
+    def get_total(self, user_id=0):
+        total = 0;
+
+        if user_id == 0:
+            shares = self.shares.all()
+        else:
+            shares = self.shares.filter(user__id=user_id).all()
+
+        for share in shares:
+            total += share.amount
+
+        return total
     
     class Meta:
         ordering = ['-date',]

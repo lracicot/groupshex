@@ -14,7 +14,7 @@
 	<form ng-submit="addExpense()">
 		<div class="input-prepend">
 			<span class="add-on">$</span>
-			<input type="text" placeholder="0.00" class="input-mini" ng-model="amountText" required />
+			<input type="number" step="any" min="0" placeholder="0.00" class="input-mini" ng-model="amountText" required />
 		</div>
 
         <input type="text" placeholder="food 'n shits" ng-model="titleText" class="input-xlarge" required />
@@ -33,10 +33,10 @@
 			</tr>
 		</thead>
 		<tr ng-repeat="expense in expenses">
-			<td>Louis Racicot</td>
+			<td>[{expense.buyer}]</td>
 			<td>[{expense.amount}] $</td>
-			<td>100%</td>
-			<td>Food and some other shits</td>
+			<td>[{expense.share}]%</td>
+			<td>[{expense.title}]</td>
 		</tr>
 	</table>
 

@@ -5,7 +5,7 @@ from django.template import Context, loader
 from django.http import Http404
 from expenses.models import Group, User, Expense, Expense_Shares
 from django.utils import simplejson
-#from django.core import serializers
+from django.core import serializers
 
 
 @login_required()
@@ -64,14 +64,23 @@ def add_expense(request):
         return HttpResponse(simplejson.dumps(data), mimetype="application/json")
 
 
-#@login_required()
-#def get_expenses(request, group_id):
-#
-#    group = Group.objects.get(id=group_id)
-#
-#    data = serializers.serialize('json', [group.expenses.all()])
-#    return HttpResponse(data, mimetype="application/json")
-#
+@login_required()
+def get_expenses(request, group_id):
+
+    group = Group.objects.get(id=group_id)
+    data = []
+
+    for expense in group.expenses.all():
+        if expense.get_total() > 0:
+            data.append({
+                'amount': str(expense.get_total()),
+                'buyer': expense.buyer.first_name + ' ' + expense.buyer.last_name,
+                'share': str(expense.get_total(expense.buyer.id)*100/expense.get_total()),
+                'title': expense.title
+            })
+
+    return HttpResponse(simplejson.dumps(data), mimetype="application/json")
+
 
 def __groupboard(request, group, user):
 

@@ -9,14 +9,17 @@ angular.module('expensesList', [], function ($interpolateProvider, $httpProvider
 });
 
 function ExpensesCtl($scope, $http) {
-  $scope.expenses = [
-    {amount:'42'},
-    {amount:'54.34'}];
+
+    $scope.expenses = [{amount: ''}];
+    $http.get("/expenses/get/1", {headers: {"X-CSRFToken": csrftoken}, data:{}}).success(function(data) {
+        $scope.expenses = data;
+    });
 
     $scope.addExpense = function() {
         expense = {group_id:$('#group_id').val(), amount:$scope.amountText, title:$scope.titleText};
 
         $http.post('/expenses/add', expense, {headers:{"X-CSRFToken": csrftoken}}).success(function(data) {
+            data.amount = parseFloat(Math.round(data.amount * 100) / 100).toFixed(2);
             $scope.expenses.push(data);
             //$scope.productText = '';
 
