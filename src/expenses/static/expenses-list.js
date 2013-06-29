@@ -21,9 +21,10 @@ function ExpensesCtl($scope, $http) {
         $http.post('/expenses/add', expense, {headers:{"X-CSRFToken": csrftoken}}).success(function(data) {
             data.amount = parseFloat(Math.round(data.amount * 100) / 100).toFixed(2);
             $scope.expenses.push(data);
-            //$scope.productText = '';
+            $scope.amountText = '';
+            $scope.titleText = '';
 
-            //$('#inv_product').focus();
+            $('input[ng-model="amountText"]').focus();
         });
     };
 }
