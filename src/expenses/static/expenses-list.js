@@ -11,7 +11,7 @@ angular.module('expensesList', [], function ($interpolateProvider, $httpProvider
 function ExpensesCtl($scope, $http) {
 
     $scope.expenses = [{amount: ''}];
-    $http.get("/expenses/get/1", {headers: {"X-CSRFToken": csrftoken}, data:{}}).success(function(data) {
+    $http.get("/expenses/get/"+$('#group_id').val(), {headers: {"X-CSRFToken": csrftoken}, data:{}}).success(function(data) {
         $scope.expenses = data;
     });
 

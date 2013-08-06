@@ -1,0 +1,15 @@
+{% extends "header.html" %}
+{% block html_title %}
+	Groupes - {{ block.super }}
+{% endblock %}
+{% block script_header %}
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular-resource.min.js"></script>
+	<script type="text/javascript" src="/static/groups-crud.js"></script>
+{% endblock %}
+{% block title %}Groupes{% endblock %}
+{% block subtitle %}{% endblock %}
+{% block content %}
+
+<div ng-app="groupsList" ng-view></div>
+
+{% endblock %}

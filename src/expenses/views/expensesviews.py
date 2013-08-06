@@ -6,6 +6,7 @@ from django.http import Http404
 from expenses.models import Group, User, Expense, Expense_Shares
 from django.utils import simplejson
 from django.core import serializers
+from groupsviews import manage_groups
 
 
 @login_required()
@@ -17,7 +18,8 @@ def index(request):
     if groups.count() == 1:
         return __groupboard(request, groups[0], user)
 
-    return __manage_groups(user)
+    return redirect('manage_groups')
+    #return __manage_groups(user)
 
 
 @login_required()
@@ -29,7 +31,7 @@ def grouboard(request, group_id):
     if not group:
         raise Http404
 
-    return __groupboard(group, user)
+    return __groupboard(group, group, user)
 
 
 @login_required()
@@ -88,16 +90,6 @@ def __groupboard(request, group, user):
     context = Context({
         'groups': user.get_groups(),
         'group': group,
-    })
-
-    return HttpResponse(template.render(context))
-
-
-def __manage_group(user, groups):
-
-    template = loader.get_template('group_list.html')
-    context = Context({
-        'groups': groups,
     })
 
     return HttpResponse(template.render(context))

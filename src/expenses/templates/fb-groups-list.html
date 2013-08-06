@@ -1,0 +1,16 @@
+<table class="table">
+  <thead>
+  <tr>
+    <th>Groupe</th>
+    <th><a href="#/new"><i class="icon-plus-sign"></i></a></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="group in groups | filter:search | orderBy:'name'">
+    <td><a href="/expenses/[{group.id}]" target="_blank">[{group.name}]</a></td>
+    <td>
+      <a href="#/edit/[{group.id}]"><i class="icon-pencil"></i></a>
+    </td>
+  </tr>
+  </tbody>
+</table>
