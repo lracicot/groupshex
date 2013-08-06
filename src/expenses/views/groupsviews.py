@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.template import Context, loader
 from django.http import Http404
-from expenses.models import Group, User, Expense, Expense_Shares
+from expenses.models import Group, User, Expense, Expense_Shares, Membership
 from django.utils import simplejson
 from django.core import serializers
 
@@ -34,3 +34,24 @@ def get_groups(request):
 	    })
 
     return HttpResponse(simplejson.dumps(data), mimetype="application/json")
+
+@login_required()
+def add_group(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    group = Group(name=request.POST['name'])
+    group.save()
+
+    mebership = Membership(group=group, user=user)
+    mebership.save()
+
+    if request.is_ajax():
+        import json
+
+        data = {
+            'id': group.id,
+            'name': group.name
+        }
+
+        return HttpResponse(simplejson.dumps(data), mimetype="application/json")

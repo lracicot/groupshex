@@ -10,5 +10,7 @@ urlpatterns = patterns('',
     url(r'^expenses/(\d+)$', views.grouboard, name='grouboard'),
     url(r'^groups/$', views.manage_groups, name='manage_groups'),
     url(r'^groups/get/$', views.get_groups, name='get_groups'),
-    url(r'^groups/fb-groups-list.html$', TemplateView.as_view(template_name='fb-groups-list.html'))
+    url(r'^groups/add$', views.add_group, name='add_group'),
+    url(r'^groups/groups-list.html$', TemplateView.as_view(template_name='groups-list.html')),
+    url(r'^groups/groups-detail.html$', TemplateView.as_view(template_name='groups-detail.html'))
 )

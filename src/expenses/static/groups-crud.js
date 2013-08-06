@@ -2,34 +2,42 @@ angular.module('groupsList', [], function ($interpolateProvider, $httpProvider, 
     $interpolateProvider.startSymbol('[{');
     $interpolateProvider.endSymbol('}]');
 
-    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
-    //$httpProvider.defaults.transformRequest = function(data) {
-    //  return $.param(data);
-    //}
+    $routeProvider
+      .when('/', {controller:ListCtrl, templateUrl:'groups-list.html'})
+      .when('/edit/:groupId', {controller:EditCtrl, templateUrl:'groups-detail.html'})
+      .when('/new', {controller:CreateCtrl, templateUrl:'groups-detail.html'})
+    .otherwise({redirectTo:'/'});
 
-    $routeProvider.
-      when('/', {controller:ListCtrl, templateUrl:'fb-groups-list.html'}).
-      when('/edit/:groupId', {controller:EditCtrl, templateUrl:'fb-groups-detail.html'}).
-      when('/new', {controller:CreateCtrl, templateUrl:'fb-groups-detail.html'}).
-      otherwise({redirectTo:'/'});
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+    $httpProvider.defaults.transformRequest = function(data) {
+      if (typeof data != 'undefined') {
+        return $.param(data);
+      }
+    }
+
   });
  
 function ListCtrl($scope, $http) {
   $scope.groups = [{id: ''}];
   $http.get("/groups/get/", {headers: {"X-CSRFToken": csrftoken}, data:{}}).success(function(data) {
-        $scope.groups = data;
-    });
+    $scope.groups = data;
+  });
 }
  
-function CreateCtrl($scope, $location, $timeout, Groups) {
+function CreateCtrl($scope, $http, $location, $timeout) {
   $scope.save = function() {
-    Groups.add($scope.group, function() {
-      $timeout(function() { $location.path('/'); });
+    group = {name:$scope.groupName};
+
+    $http.post('/groups/add', group, {headers:{"X-CSRFToken": csrftoken}}).success(function(data) {
+        $scope.group.push(data);
+        $scope.name = '';
     });
+
+    $timeout(function() { $location.path('/'); });
   }
 }
  
-function EditCtrl($scope, $location, $routeParams, angularFire, fbURL) {
+function EditCtrl($scope, $location, $routeParams) {
   angularFire(fbURL + $routeParams.groupId, $scope, 'remote', {}).
   then(function() {
     $scope.group = angular.copy($scope.remote);
