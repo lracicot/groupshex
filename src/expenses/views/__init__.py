@@ -4,4 +4,9 @@ from expensesviews import add_expense
 from expensesviews import get_expenses
 from groupsviews import manage_groups
 from groupsviews import get_groups
+from groupsviews import get_members
+from groupsviews import get_not_members
+from groupsviews import add_member
+from groupsviews import remove_member
+from groupsviews import get_group
 from groupsviews import add_group

@@ -26,12 +26,89 @@ def get_groups(request):
 
     user = User.objects.get(id=request.user.id)
     data = []
+ 
+    for group in user.get_groups():
+        data.append({
+            'id': group.id,
+            'name': group.name
+        })
+
+    return HttpResponse(simplejson.dumps(data), mimetype="application/json")
+
+
+@login_required()
+def get_group(request, group_id):
+
+    user = User.objects.get(id=request.user.id)
+    data = {'id': '', 'name': ''}
 
     for group in user.get_groups():
-	    data.append({
-	        'id': group.id,
-	        'name': group.name
-	    })
+
+        if group.id == int(group_id):
+            data = {'id': group.id, 'name': group.name}
+
+    return HttpResponse(simplejson.dumps(data), mimetype="application/json")
+
+
+@login_required()
+def add_member(request, group_id, member_id):
+
+    user = User.objects.get(id=request.user.id)
+    member = User.objects.get(id=member_id)
+    data = {'id': '', 'name': ''}
+
+    for group in user.get_groups():
+
+        if group.id == int(group_id):
+            m = Membership(user=member, group=group)
+            m.save()
+
+    return HttpResponse('', mimetype="application/json")
+
+
+@login_required()
+def remove_member(request, group_id, member_id):
+
+    user = User.objects.get(id=request.user.id)
+    member = User.objects.get(id=member_id)
+    data = {'id': '', 'name': ''}
+
+    for group in user.get_groups():
+
+        if group.id == int(group_id):
+            membership = Membership.objects.filter(user=member, group=group)
+            membership.delete()
+
+    return HttpResponse('', mimetype="application/json")
+
+
+@login_required()
+def get_members(request, group_id):
+
+    user = User.objects.get(id=request.user.id)
+    data = []
+
+    for group in user.get_groups():
+        if group.id == int(group_id):
+            for member in group.get_users():
+                data.append({'id': member.id, 'name': member.first_name + ' ' + member.last_name})
+
+    return HttpResponse(simplejson.dumps(data), mimetype="application/json")
+
+@login_required()
+def get_not_members(request, group_id):
+
+    user = User.objects.get(id=request.user.id)
+    members_id = []
+    data = []
+
+    for group in user.get_groups():
+        if group.id == int(group_id):
+            for member in group.get_users():
+                members_id.append(member.id)
+
+    for user in User.objects.exclude(id__in=members_id).filter(first_name__icontains=request.POST['term']):
+        data.append({'id': user.id, 'name': user.first_name + ' ' + user.last_name});
 
     return HttpResponse(simplejson.dumps(data), mimetype="application/json")
 

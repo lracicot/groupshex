@@ -14,7 +14,6 @@ angular.module('groupsList', [], function ($interpolateProvider, $httpProvider, 
         return $.param(data);
       }
     }
-
   });
  
 function ListCtrl($scope, $http) {
@@ -29,7 +28,7 @@ function CreateCtrl($scope, $http, $location, $timeout) {
     group = {name:$scope.groupName};
 
     $http.post('/groups/add', group, {headers:{"X-CSRFToken": csrftoken}}).success(function(data) {
-        $scope.group.push(data);
+        $scope.groups.push(data);
         $scope.name = '';
     });
 
@@ -37,21 +36,57 @@ function CreateCtrl($scope, $http, $location, $timeout) {
   }
 }
  
-function EditCtrl($scope, $location, $routeParams) {
-  angularFire(fbURL + $routeParams.groupId, $scope, 'remote', {}).
-  then(function() {
-    $scope.group = angular.copy($scope.remote);
-    $scope.group.$id = $routeParams.groupId;
-    $scope.isClean = function() {
-      return angular.equals($scope.remote, $scope.group);
-    }
-    $scope.destroy = function() {
-      $scope.remote = null;
-      $location.path('/');
-    };
-    $scope.save = function() {
-      $scope.remote = angular.copy($scope.group);
-      $location.path('/');
-    };
+function EditCtrl($scope, $location, $routeParams, $http) {
+
+  $scope.members = [{id: ''}];
+  $http.get("/groups/get_members/"+$routeParams.groupId, {headers: {"X-CSRFToken": csrftoken}, data:{}}).success(function(data) {
+    $scope.members = data;
   });
+
+  $(document).ready(function(){
+    $('#user_autocomplete').autocomplete({
+      minLength: 2,
+      source: function(req, add) {
+          $.post("/groups/get_not_members/"+$routeParams.groupId, req, function(data) {
+              var suggestions = [];
+
+              $.each(data, function(i, val) {
+
+                  suggestions.push({
+                      label: val.name,
+                      value: val.id
+                  });
+              });
+
+              add(suggestions);
+          }, 'json');
+      },
+      select: function(e, ui) {
+        $.post("/groups/add_member/"+$routeParams.groupId+'/'+ui.item.value);
+        $scope.$apply(function () {
+          $scope.members.push({id:ui.item.value, name:ui.item.label});
+        });
+      },
+      close: function(){
+        $('#user_autocomplete').val('');
+      }
+    });
+  });
+
+  $http.get("/groups/get/"+$routeParams.groupId, {headers: {"X-CSRFToken": csrftoken}, data:{}}).success(function(data) {
+    $scope.groupName = data.name;
+  });
+
+  $scope.removeMember = function(member_id) {
+    $.post("/groups/remove_member/"+$routeParams.groupId+'/'+member_id);
+    $.each($scope.members, function(index, member){
+      if (member.id == member_id) {
+        $scope.members.splice(index, 1);
+      }
+    })
+  }
+  $scope.save = function() {
+    $scope.remote = angular.copy($scope.group);
+    $location.path('/');
+  };
 }
