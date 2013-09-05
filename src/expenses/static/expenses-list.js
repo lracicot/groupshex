@@ -18,7 +18,7 @@ function ExpensesCtl($scope, $http) {
     $scope.addExpense = function() {
         expense = {group_id:$('#group_id').val(), amount:$scope.amountText, title:$scope.titleText};
 
-        $http.post('/expenses/add', expense, {headers:{"X-CSRFToken": csrftoken}}).success(function(data) {
+        $http.post('/gs/expenses/add', expense, {headers:{"X-CSRFToken": csrftoken}}).success(function(data) {
             data.amount = parseFloat(Math.round(data.amount * 100) / 100).toFixed(2);
             $scope.expenses.push(data);
             $scope.amountText = '';
