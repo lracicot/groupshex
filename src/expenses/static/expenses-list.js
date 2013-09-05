@@ -11,14 +11,14 @@ angular.module('expensesList', [], function ($interpolateProvider, $httpProvider
 function ExpensesCtl($scope, $http) {
 
     $scope.expenses = [{amount: ''}];
-    $http.get("/gs/expenses/get/"+$('#group_id').val(), {headers: {"X-CSRFToken": csrftoken}, data:{}}).success(function(data) {
+    $http.get(base_uri+"expenses/get/"+$('#group_id').val(), {headers: {"X-CSRFToken": csrftoken}, data:{}}).success(function(data) {
         $scope.expenses = data;
     });
 
     $scope.addExpense = function() {
         expense = {group_id:$('#group_id').val(), amount:$scope.amountText, title:$scope.titleText};
 
-        $http.post('/gs/expenses/add', expense, {headers:{"X-CSRFToken": csrftoken}}).success(function(data) {
+        $http.post(base_uri+'expenses/add', expense, {headers:{"X-CSRFToken": csrftoken}}).success(function(data) {
             data.amount = parseFloat(Math.round(data.amount * 100) / 100).toFixed(2);
             $scope.expenses.push(data);
             $scope.amountText = '';
