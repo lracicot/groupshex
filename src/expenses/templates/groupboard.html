@@ -27,17 +27,17 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th>Acheteur</th>
-				<th>Total</th>
-				<th>Partage</th>
 				<th>Description</th>
+				<th>Total</th>
+				<th>Acheteur</th>
+				<th>Partage</th>
 			</tr>
 		</thead>
 		<tr ng-repeat="expense in expenses">
-			<td>[{expense.buyer}]</td>
-			<td>[{expense.amount}] $</td>
-			<td>[{expense.share}]%</td>
 			<td>[{expense.title}]</td>
+			<td>[{expense.amount}] $</td>
+			<td>[{expense.buyer}]</td>
+			<td>[{expense.share}]%</td>
 		</tr>
 	</table>
 
