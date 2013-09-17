@@ -49,10 +49,10 @@ def add_expense(request):
     expense.group = group
     expense.save()
 
-    for user in group.get_users():
-        share = Expense_Shares(amount=0, expense=expense, user=user)
+    for user_share in group.get_users():
+        share = Expense_Shares(amount=0, expense=expense, user=user_share)
 
-        if user.id == request.user.id:
+        if user_share.id == request.user_share.id:
             share.amount = request.POST['amount']
 
         share.save()
