@@ -8,6 +8,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils import simplejson
 from django.core import serializers
 from groupsviews import manage_groups
+from decimal import Decimal
+
 
 
 @login_required()
@@ -82,7 +84,7 @@ def get_expenses(request, group_id):
             data.append({
                 'amount': str(expense.get_total()),
                 'buyer': expense.buyer.first_name + ' ' + expense.buyer.last_name,
-                'share': str(expense.get_total(expense.buyer.id)*100/expense.get_total()),
+                'share': str(Decimal(expense.get_total(expense.buyer.id)*100/expense.get_total()).quantize(Decimal('1'))),
                 'title': expense.title
             })
 
