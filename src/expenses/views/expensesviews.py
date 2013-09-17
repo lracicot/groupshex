@@ -4,12 +4,14 @@ from django.contrib.auth.decorators import login_required
 from django.template import Context, loader
 from django.http import Http404
 from expenses.models import Group, User, Expense, Expense_Shares
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils import simplejson
 from django.core import serializers
 from groupsviews import manage_groups
 
 
 @login_required()
+@ensure_csrf_cookie
 def index(request):
 
     user = User.objects.get(id=request.user.id)
@@ -23,6 +25,7 @@ def index(request):
 
 
 @login_required()
+@ensure_csrf_cookie
 def grouboard(request, group_id):
 
     user = User.objects.get(id=request.user.id)
@@ -35,6 +38,7 @@ def grouboard(request, group_id):
 
 
 @login_required()
+@ensure_csrf_cookie
 def add_expense(request):
 
     user = User.objects.get(id=request.user.id)
@@ -67,6 +71,7 @@ def add_expense(request):
 
 
 @login_required()
+@ensure_csrf_cookie
 def get_expenses(request, group_id):
 
     group = Group.objects.get(id=group_id)
